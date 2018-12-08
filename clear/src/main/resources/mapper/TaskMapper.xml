@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="libai.wxapp.clear.dao.TaskMapper">
+  <resultMap id="BaseResultMap" type="libai.wxapp.clear.pojo.Task">
+    <result column="t_id" jdbcType="INTEGER" property="tId" />
+    <result column="t_name" jdbcType="VARCHAR" property="tName" />
+    <result column="t_score" jdbcType="INTEGER" property="tScore" />
+    <result column="t_text" jdbcType="VARCHAR" property="tText" />
+    <result column="t_status" jdbcType="INTEGER" property="tStatus" />
+    <result column="t_user" jdbcType="VARCHAR" property="tUser" />
+  </resultMap>
+
+  <insert id="insert" parameterType="libai.wxapp.clear.pojo.Task">
+    insert into task
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="tId != null">
+        t_id,
+      </if>
+      <if test="tName != null">
+        t_name,
+      </if>
+      <if test="tScore != null">
+        t_score,
+      </if>
+      <if test="tText != null">
+        t_text,
+      </if>
+      <if test="tStatus != null">
+        t_status,
+      </if>
+      <if test="tUser != null">
+        t_user,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="tId != null">
+        #{tId,jdbcType=INTEGER},
+      </if>
+      <if test="tName != null">
+        #{tName,jdbcType=VARCHAR},
+      </if>
+      <if test="tScore != null">
+        #{tScore,jdbcType=INTEGER},
+      </if>
+      <if test="tText != null">
+        #{tText,jdbcType=VARCHAR},
+      </if>
+      <if test="tStatus != null">
+        #{tStatus,jdbcType=INTEGER},
+      </if>
+      <if test="tUser != null">
+        #{tUser,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    select t_id, t_name, t_score, t_text, t_status, t_user,t_receiver
+    from task
+  </select>
+  <select id="selectTaskById" parameterType="int" resultType="libai.wxapp.clear.pojo.Task">
+    select t_id, t_name, t_score, t_text, t_status, t_user,t_receiver
+    from task WHERE t_id=#{taskId};
+  </select>
+
+    <select id="getNum" parameterType="string" resultType="int">
+        SELECT COUNT(*) FROM task WHERE t_user=#{name};
+    </select>
+    <select id="getRNum" parameterType="string" resultType="int">
+        SELECT COUNT(*) FROM task WHERE t_receiver=#{name};
+    </select>
+
+    <select id="unaccept"  resultType="libai.wxapp.clear.pojo.Task">
+        select t_id, t_name, t_score, t_text, t_status, t_user
+        from task WHERE t_status=0;
+    </select>
+
+    <select id="accepted"  resultType="libai.wxapp.clear.pojo.Task">
+        select t_id, t_name, t_score, t_text, t_status, t_user,t_receiver
+        from task WHERE t_status=1;
+    </select>
+
+    <select id="myPostTask"  resultType="libai.wxapp.clear.pojo.Task">
+        select t_id, t_name, t_score, t_text, t_status, t_user,t_receiver
+        from task WHERE t_user=#{name};
+    </select>
+
+    <select id="myGetTask"  resultType="libai.wxapp.clear.pojo.Task">
+        select t_id, t_name, t_score, t_text, t_status, t_user,t_receiver
+        from task WHERE t_receiver=#{name};
+    </select>
+
+
+    <update id="addReceiver" parameterType="string">
+        UPDATE task SET t_receiver =#{name};
+    </update>
+</mapper>

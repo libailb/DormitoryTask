@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="libai.wxapp.clear.dao.UserMapper">
+  <insert id="insert" parameterType="libai.wxapp.clear.pojo.User">
+    insert into appuser (id, name, score
+      )
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{score,jdbcType=INTEGER}
+      )
+  </insert>
+  <select id="selectAll" resultType="libai.wxapp.clear.pojo.User">
+    select id,name, score,getnum,postnum
+    from appuser ORDER BY score DESC
+  </select>
+  <update id="getTask" parameterType="map">
+    UPDATE appuser a, task t SET a.score=a.score+t.t_score,t.t_status=1,a.getnum=a.getnum+1 where t.t_status =0 and t.t_id =#{taskId}
+    and a.id=#{id};
+  </update>
+
+  <update id="postTask" parameterType="map">
+    UPDATE appuser a SET a.score=a.score-#{score},a.postnum=a.postnum+1 where  a.id=#{id};
+  </update>
+
+  <select id="selectUser" parameterType="map" resultType="libai.wxapp.clear.pojo.User">
+    SELECT id,name ,score,getnum,postnum FROM appuser WHERE name=#{username} and password=#{password};
+  </select>
+
+  <select id="selectById" parameterType="int" resultType="libai.wxapp.clear.pojo.User">
+    SELECT id,name,score,getnum,postnum FROM appuser WHERE id=#{id};
+  </select>
+</mapper>
